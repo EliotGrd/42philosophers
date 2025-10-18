@@ -3,7 +3,7 @@ NAME = philo
 SRC_PATH = srcs/
 OBJ_PATH = build/
 
-SRC = main.c parsing.c utils.c 
+SRC = main.c parsing.c utils.c philosophing.c 
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
 OBJ = $(addprefix $(OBJ_PATH), $(SRC:.c=.o))

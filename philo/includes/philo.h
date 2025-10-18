@@ -6,7 +6,7 @@
 /*   By: egiraud <egiraud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 17:57:59 by egiraud           #+#    #+#             */
-/*   Updated: 2025/10/15 22:29:57 by egiraud          ###   ########.fr       */
+/*   Updated: 2025/10/18 23:01:43 by egiraud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,19 @@
 
 typedef struct s_philo
 {
-	struct s_global	*bla;
-	int				ate;
+	int ate; // bool
+	int				index;
+	int				must_eat_count;
+	int				already_eat_count;
+	pthread_mutex_t	fork_right;
+	pthread_mutex_t	fork_left;
+	struct s_global	*global;
 }					t_philo;
 
 typedef struct s_global
 {
 	int				philo_count;
+	t_philo			*philos;
 	int				ttdie;
 	int				tteat;
 	int				ttsleep;
@@ -39,5 +45,10 @@ typedef struct s_global
 }					t_global;
 
 int					parse_args(t_global *global, int argc, char **argv);
+void	start_philosophing(t_global *global);
+
+long long			timestamp(void);
+void				ft_usleep(unsigned int ms);
+void				ft_free(void **ptr);
 
 #endif
