@@ -21,14 +21,14 @@ all: $(NAME)
 
 $(NAME): $(OBJ) $(INCS)
 	@echo "\n$(PURPLE)  Compiling Philosophers...$(NC)"
-	@$(CC) $(CFLAGS) $(OBJ) $(INC) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(INC) -pthread -o $(NAME)
 	@echo "\n$(PURPLE)  Ready ✓$(NC)\n"
 
 -include $(DPD)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) $(INC) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INC) -pthread -c $< -o $@
 
 clean:
 	@echo "\n$(PURPLE)  Cleaning object files... $(NC)"

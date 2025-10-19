@@ -6,13 +6,13 @@
 /*   By: egiraud <egiraud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 22:35:48 by egiraud           #+#    #+#             */
-/*   Updated: 2025/10/15 22:46:52 by egiraud          ###   ########.fr       */
+/*   Updated: 2025/10/19 20:37:36 by egiraud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-long long	timestamp(void)
+unsigned int	timestamp(void)
 {
 	struct timeval	tv;
 
