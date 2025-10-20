@@ -23,13 +23,13 @@ void	print_status(t_philo *philo, t_print type)
 	pthread_mutex_lock(&philo->global->lock_print);
 	if (type == FORK_R || type == FORK_L)
 		actual_print(philo->index, "has taken a fork");
-	if (type == EAT)
+	else if (type == EAT)
 		actual_print(philo->index, "is eating");
-	if (type == SLEEP)
+	else if (type == SLEEP)
 		actual_print(philo->index, "is sleeping");
-	if (type == THINK)
+	else if (type == THINK)
 		actual_print(philo->index, "is thinking");
-	if (type == DIED)
+	else if (type == DIED)
 		actual_print(philo->index, "died");
 	pthread_mutex_unlock(&philo->global->lock_print);
 }
