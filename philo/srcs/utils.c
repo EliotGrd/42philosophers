@@ -34,7 +34,7 @@ int	usleep_check_death(unsigned int ms, t_philo *philo)
 	unsigned int	wake_up;
 
 	wake_up = timestamp() + ms;
-	while (timestamp() < wake_up)
+	while (timestamp() <= wake_up)
 	{
 		usleep(100);
 		if (check_death(philo))

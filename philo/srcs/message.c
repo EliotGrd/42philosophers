@@ -12,31 +12,32 @@
 
 #include "../includes/philo.h"
 
-static void	actual_print(int index, char *str)
+static void	actual_print(t_philo *philo, char *str)
 {
-	printf("%du %d %s", timestamp(), index, str);
+	printf("%d %d %s\n", (timestamp() - philo->global->start_time), philo->index,
+		str);
 }
 
 void	print_status(t_philo *philo, t_print type)
 {
-	//gerer le cas de mort differemment ?
+	// gerer le cas de mort differemment ?
 	pthread_mutex_lock(&philo->global->lock_print);
 	if (type == FORK_R || type == FORK_L)
-		actual_print(philo->index, "has taken a fork");
+		actual_print(philo, "has taken a fork");
 	else if (type == EAT)
-		actual_print(philo->index, "is eating");
+		actual_print(philo, "is eating");
 	else if (type == SLEEP)
-		actual_print(philo->index, "is sleeping");
+		actual_print(philo, "is sleeping");
 	else if (type == THINK)
-		actual_print(philo->index, "is thinking");
+		actual_print(philo, "is thinking");
 	else if (type == DIED)
-		actual_print(philo->index, "died");
+		actual_print(philo, "died");
 	pthread_mutex_unlock(&philo->global->lock_print);
 }
 
 void	stderr_msg(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])

@@ -45,6 +45,7 @@ int	eating(t_philo *philo)
 	usleep_check_death(philo->global->tteat, philo);
 	philo->last_meal = timestamp();
 	print_status(philo, EAT); // pas sur de l'ordre ici aussi
+	philo->already_eat_count += 1;
 	pthread_mutex_unlock(&philo->last_meal_lock);
 	return (0);
 }

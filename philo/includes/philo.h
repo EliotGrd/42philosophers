@@ -41,12 +41,12 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 	int				index;
-	int				must_eat_count;
+	int				must_eat_count; // pas necessaire ?
 	int				already_eat_count;
 	unsigned int	last_meal;
 	pthread_mutex_t	last_meal_lock;
-	pthread_mutex_t	fork_right;
-	pthread_mutex_t	fork_left;
+	pthread_mutex_t	*fork_right;
+	pthread_mutex_t	*fork_left;
 	struct s_global	*global;
 }					t_philo;
 
@@ -59,6 +59,7 @@ typedef struct s_global
 	int				ttsleep;
 	int				must_eat_count;
 	int				stop_sim;
+	unsigned int	start_time;
 	pthread_t		monitor;
 	pthread_mutex_t	start_lock;
 	pthread_mutex_t	lock_print;

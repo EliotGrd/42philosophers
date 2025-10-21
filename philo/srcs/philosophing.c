@@ -12,19 +12,18 @@
 
 #include "../includes/philo.h"
 
-void	*philo_routine(void *arg)
+static void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->global->start_lock);
-	pthread_mutex_unlock(&philo->global->start_lock);
+	//pthread_mutex_lock(&philo->global->start_lock);
+	//pthread_mutex_unlock(&philo->global->start_lock);
 	pthread_mutex_lock(&philo->last_meal_lock);
 	philo->last_meal = timestamp();
-	pthread_mutex_lock(&philo->last_meal_lock);
+	pthread_mutex_unlock(&philo->last_meal_lock);
 	if (philo->index % 2 == 0)
-		usleep(100); // voir comment ca se comporte tel quel
-	//
+		usleep(200); // voir comment ca se comporte tel quel
 	while (1)
 	{
 		if (eating(philo))
@@ -37,7 +36,7 @@ void	*philo_routine(void *arg)
 	return (NULL);
 }
 
-void	*lone_philo_routine(void *arg)
+static void	*lone_philo_routine(void *arg)
 {
 	t_philo	*philo;
 
@@ -54,20 +53,20 @@ void	start_philosophing(t_global *global)
 	int	i;
 
 	i = 0;
+	global->start_time = timestamp();
 	if (global->philo_count == 1)
 	{
-		pthread_create(&global->philos[0].thread, NULL, lone_philo_routine,
+		pthread_create(&global->philos[0].thread, NULL, &lone_philo_routine,
 			&global->philos[0]);
 		pthread_join(global->philos[0].thread, NULL);
 		return ;
 	}
-	// thread moniteur
-	if (pthread_create(&global->monitor, NULL, monitor_routine, global))
+	if (pthread_create(&global->monitor, NULL, &monitor_routine, global))
 		return (stderr_msg(THREAD));
 	pthread_mutex_lock(&global->start_lock);
 	while (i < global->philo_count)
 	{
-		if (pthread_create(&global->philos[i].thread, NULL, philo_routine,
+		if (pthread_create(&global->philos[i].thread, NULL, &philo_routine,
 				&global->philos[i]))
 		{
 			pthread_mutex_lock(&global->stop_sim_lock);
@@ -79,9 +78,8 @@ void	start_philosophing(t_global *global)
 		i++;
 	}
 	pthread_mutex_unlock(&global->start_lock);
-	while (i > 0)
+	while (--i >= 0)
 	{
 		pthread_join(global->philos[i].thread, NULL);
-		i--;
 	}
 }

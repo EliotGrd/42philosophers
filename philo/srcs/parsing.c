@@ -12,7 +12,7 @@
 
 #include "../includes/philo.h"
 
-int	are_all_digits(char **av)
+static int	are_all_digits(char **av)
 {
 	int	i;
 	int	j;
@@ -21,6 +21,7 @@ int	are_all_digits(char **av)
 	j = 0;
 	while (av[i])
 	{
+		j = 0;
 		while (av[i][j])
 		{
 			if (!(av[i][j] >= 48 && av[i][j] <= 57))
@@ -32,7 +33,7 @@ int	are_all_digits(char **av)
 	return (0);
 }
 
-int	ft_atoi_safe_positive(const char *nptr)
+static int	ft_atoi_safe_positive(const char *nptr)
 {
 	int		i;
 	long	nb;
@@ -50,6 +51,11 @@ int	ft_atoi_safe_positive(const char *nptr)
 	return (nb);
 }
 
+//static void	check_time_validity(t_global *global)
+//{
+//   if ()
+//}
+
 int	parse_args(t_global *gb, int ac, char **av)
 {
 	if (ac < 5 || ac > 6)
@@ -62,11 +68,15 @@ int	parse_args(t_global *gb, int ac, char **av)
 	gb->ttsleep = ft_atoi_safe_positive(av[4]);
 	if (av[5])
 		gb->must_eat_count = ft_atoi_safe_positive(av[5]);
+	else
+	 	gb->must_eat_count = -1;
 	if (gb->philo_count == -1 || gb->ttdie == -1 || gb->tteat == -1
 		|| gb->ttsleep == -1 || gb->ttsleep == -1)
-		return (printf("Number too big :(\n"), 1);
+		return (printf("Number too big (int overflow) :(\n"), 1);
 	if (gb->philo_count == 0 || gb->ttdie == 0 || gb->tteat == 0
 		|| gb->ttsleep == 0 || gb->ttsleep == 0)
 		return (printf("All numbers must be greater than 0\n"), 1);
+	//if (check_time_validity(gb))
+	//	return (printf("Time chosen will overflow usleep max value so "))
 	return (0);
 }
