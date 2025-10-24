@@ -36,11 +36,12 @@ void	*monitor_routine(void *arg)
 	int	all_philo_full;
 	int i;
 
-	i = 0;
-	all_philo_full = 1;
 	global = (t_global *)arg;
+	pthread_mutex_lock(&global->start_lock);
+	pthread_mutex_unlock(&global->start_lock);
 	while (1)
 	{
+		i = 0;
 		all_philo_full = 1;
 		while (i < global->philo_count)
 		{
@@ -58,11 +59,12 @@ void	*monitor_routine(void *arg)
 			global->stop_sim = 1;
 			pthread_mutex_unlock(&global->stop_sim_lock);
 		}
-		usleep(500); //fine tune 200 test a faire
+		usleep(100); //fine tune 200 test a faire
 	}
 	return (NULL);
 }
 
 //demander pour etre sur de quoi faire dans le cas ou tout le monde a assez mange
 
-
+//pour l'instant max meals fonctionne que sur les impairs
+//comment faire pour que seulement un philo die

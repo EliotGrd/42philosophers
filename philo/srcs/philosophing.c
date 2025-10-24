@@ -17,8 +17,8 @@ static void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	//pthread_mutex_lock(&philo->global->start_lock);
-	//pthread_mutex_unlock(&philo->global->start_lock);
+	pthread_mutex_lock(&philo->global->start_lock);
+	pthread_mutex_unlock(&philo->global->start_lock);
 	pthread_mutex_lock(&philo->last_meal_lock);
 	philo->last_meal = timestamp();
 	pthread_mutex_unlock(&philo->last_meal_lock);
@@ -61,9 +61,9 @@ void	start_philosophing(t_global *global)
 		pthread_join(global->philos[0].thread, NULL);
 		return ;
 	}
+	pthread_mutex_lock(&global->start_lock);
 	if (pthread_create(&global->monitor, NULL, &monitor_routine, global))
 		return (stderr_msg(THREAD));
-	pthread_mutex_lock(&global->start_lock);
 	while (i < global->philo_count)
 	{
 		if (pthread_create(&global->philos[i].thread, NULL, &philo_routine,
@@ -77,9 +77,14 @@ void	start_philosophing(t_global *global)
 		}
 		i++;
 	}
+	for (i = 0; i < global->philo_count; i++)
+	{
+		global->philos[i].last_meal = timestamp();
+	}
 	pthread_mutex_unlock(&global->start_lock);
 	while (--i >= 0)
 	{
 		pthread_join(global->philos[i].thread, NULL);
 	}
+	pthread_join(global->monitor, NULL);
 }

@@ -33,7 +33,9 @@ typedef enum e_print
 	SLEEP,
 	THINK,
 	FORK_R,
+	LEAVE_R,
 	FORK_L,
+	LEAVE_L,
 	DIED
 }					t_print;
 
@@ -41,7 +43,7 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 	int				index;
-	int				must_eat_count; // pas necessaire ?
+	int must_eat_count; // pas necessaire ?
 	int				already_eat_count;
 	unsigned int	last_meal;
 	pthread_mutex_t	last_meal_lock;
@@ -75,6 +77,8 @@ int					eating(t_philo *philo);
 int					sleeping(t_philo *philo);
 int					thinking(t_philo *philo);
 void				print_status(t_philo *philo, t_print type);
+
+void				print_status_debug(t_philo *philo, t_print type);
 
 int					check_death(t_philo *philo);
 unsigned int		timestamp(void);
