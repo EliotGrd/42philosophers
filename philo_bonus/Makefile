@@ -10,7 +10,7 @@ OBJ = $(addprefix $(OBJ_PATH), $(SRC:.c=.o))
 DPD = $(addprefix $(OBJ_PATH), $(SRC:.c=.d))
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -MMD -g #-fsanitize=address,leak,undefined
+CFLAGS = -Wall -Wextra -Werror -MMD -g -pthread #-fsanitize=address,leak,undefined
 INCS = includes/philo.h
 INC = -Iincludes
 
