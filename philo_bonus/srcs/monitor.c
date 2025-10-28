@@ -30,6 +30,10 @@ static int	flag_death(t_global *global, int i)
 	return (0);
 }
 
+//wait till le sem all philo ate est du nombre de philo ca veut dire ils ont tous mange
+//
+//wait pid sur le tableau de pid pour exit propre
+
 void	*monitor_routine(void *arg)
 {
 	t_global *global;

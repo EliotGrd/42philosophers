@@ -14,10 +14,10 @@
 
 int	check_death(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->global->stop_sim_lock);
+	sem_wait(philo->global->stop_sim_sem);
 	if (philo->global->stop_sim == 1)
-		return (pthread_mutex_unlock(&philo->global->stop_sim_lock), 1);
-	pthread_mutex_unlock(&philo->global->stop_sim_lock);
+		return (sem_post(philo->global->stop_sim_sem), 1);
+	sem_post(philo->global->stop_sim_sem);
 	return (0);
 }
 

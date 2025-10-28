@@ -31,6 +31,8 @@
 # define MALLOC "philo: Memory allocation failed\n"
 # define MUTEX "philo: Mutex creation failed\n"
 # define THREAD "philo: Thread creation failed\n"
+# define SEM "philo: Semaphore creation failed\n"
+# define FORK "philo: Fork failed\n"
 
 typedef enum e_print
 {

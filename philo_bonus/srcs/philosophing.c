@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+#include <stdlib.h>
 
 static void	*philo_routine(void *arg)
 {
@@ -41,9 +42,9 @@ static void	*lone_philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->global->forks[0]);
+	sem_wait(philo->global->forks);
 	print_status(philo, FORK_R);
-	pthread_mutex_unlock(&philo->global->forks[0]);
+	sem_post(philo->global->forks);
 	print_status(philo, DIED);
 	return (NULL);
 }
@@ -56,9 +57,7 @@ void	start_philosophing(t_global *global)
 	global->start_time = timestamp();
 	if (global->philo_count == 1)
 	{
-		pthread_create(&global->philos[0].thread, NULL, &lone_philo_routine,
-			&global->philos[0]);
-		pthread_join(global->philos[0].thread, NULL);
+
 		return ;
 	}
 	pthread_mutex_lock(&global->start_lock);
@@ -87,4 +86,36 @@ void	start_philosophing(t_global *global)
 		pthread_join(global->philos[i].thread, NULL);
 	}
 	pthread_join(global->monitor, NULL);
+}
+
+void	start_philosophing(t_global *global)
+{
+	int i;
+
+	global->pids = malloc(sizeof(pid_t) * global->nb_philos);
+	if (!global->pids)
+		return -1;
+
+	global->start_time = timestamp();
+
+
+	while (i < global->nb_philos)
+	{
+		pid_t pid = fork();
+		if (pid < 0)
+		{
+			stderr_msg(FORK);
+			return -1;
+		}
+		if (pid == 0)
+		{
+			philosopher_process(global, i);
+			//je sais pas quoi faire la return ? 
+		}
+		else
+		{
+			global->pids[i] = pid;
+		}
+	}
+	return 0;
 }

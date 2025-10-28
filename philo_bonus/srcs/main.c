@@ -11,6 +11,46 @@
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+#include <stdio.h>
+
+static sem_t *open_clean_sem(const char *name, unsigned int value)
+{
+	sem_unlink(name);
+	sem_t *s = sem_open(name, O_CREAT | O_EXCL, 0644, value);
+	if (s == SEM_FAILED)
+	{
+		stderr_msg(SEM);
+		return NULL;
+	}
+	return s;
+}
+
+static int init_global(t_global *global)
+{
+	global->forks = open_clean_sem("forks_sem", global->philo_count);
+	if (!global->forks)
+		return -1;
+	global->print_sem = open_clean_sem("print_sem", 1);
+	if (!global->print_sem)
+		return -1;
+	global->stop_sim_sem = open_clean_sem("stop_sim_sem", 1);
+	if (!global->stop_sim_sem)
+		return -1;
+	global->start_sem = open_clean_sem("start_sem", 0);
+	if (!global->start_sem)
+		return -1;
+
+
+	return 0;
+}
+
+static void sem_destructor(void)
+{
+	sem_unlink("forks_sem");
+	sem_unlink("print_sem");
+	sem_unlink("stop_sim_sem");
+	sem_unlink("start_sem");
+}
 
 void	destructor(t_global *global, int to_free)
 {
