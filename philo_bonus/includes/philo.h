@@ -54,9 +54,9 @@ typedef struct s_philo
 	int must_eat_count; // pas necessaire ?
 	int				already_eat_count;
 	unsigned int	last_meal;
-	pthread_mutex_t	last_meal_lock;
-	pthread_mutex_t	*fork_right;
-	pthread_mutex_t	*fork_left;
+	sem_t			*last_meal_sem;
+	sem_t			*fork_sem;
+	unsigned int	forks_held;
 	struct s_global	*global;
 }					t_philo;
 
@@ -79,7 +79,7 @@ typedef struct s_global
 }					t_global;
 
 int					parse_args(t_global *global, int argc, char **argv);
-void				start_philosophing(t_global *global);
+int				start_philosophing(t_global *global);
 void				*monitor_routine(void *arg);
 
 int					eating(t_philo *philo);

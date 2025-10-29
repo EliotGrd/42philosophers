@@ -12,55 +12,19 @@
 
 #include "../includes/philo.h"
 
-static void	lock_right_fork(t_philo *philo)
-{
-	if (philo->index % 2 == 0)
-	{
-		pthread_mutex_lock(&philo->global->forks[philo->index]);
-		print_status_debug(philo, FORK_R);
-		pthread_mutex_lock(&philo->global->forks[philo->index - 1 % philo->global->philo_count]);
-		print_status_debug(philo, FORK_L);
-	}
-	else
-	{
-		pthread_mutex_lock(&philo->global->forks[philo->index - 1 % philo->global->philo_count]);
-		print_status_debug(philo, FORK_L);
-		pthread_mutex_lock(&philo->global->forks[philo->index]);
-		print_status_debug(philo, FORK_R);
-	}
-}
-
-static void unlock_right_fork(t_philo *philo)
-{
-	if (philo->index % 2 == 0)
-	{
-		pthread_mutex_unlock(&philo->global->forks[philo->index]);
-		print_status_debug(philo, LEAVE_R);
-		pthread_mutex_unlock(&philo->global->forks[philo->index - 1 % philo->global->philo_count]);
-		print_status_debug(philo, LEAVE_L);
-	}
-	else
-	{
-		pthread_mutex_unlock(&philo->global->forks[philo->index - 1 % philo->global->philo_count]);
-		print_status_debug(philo, LEAVE_L);
-		pthread_mutex_unlock(&philo->global->forks[philo->index]);
-		print_status_debug(philo, LEAVE_R);
-	}
-
-}
+void	take_forks(t_philo *philo);
 
 int	eating(t_philo *philo)
 {
 	if (check_death(philo))
 		return (1);
-	lock_right_fork(philo);
+	take_forks(philo);
+	sem_wait(philo->last_meal_sem);
 	print_status_debug(philo, EAT); // pas sur de l'ordre ici aussi
 	usleep_check_death(philo->global->tteat, philo);
-	unlock_right_fork(philo);
-	pthread_mutex_lock(&philo->last_meal_lock);
 	philo->last_meal = timestamp();
 	philo->already_eat_count += 1;
-	pthread_mutex_unlock(&philo->last_meal_lock);
+	sem_post(philo->last_meal_sem);
 	return (0);
 }
 

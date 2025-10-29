@@ -41,8 +41,6 @@ void	*monitor_routine(void *arg)
 	int i;
 
 	global = (t_global *)arg;
-	pthread_mutex_lock(&global->start_lock);
-	pthread_mutex_unlock(&global->start_lock);
 	while (1)
 	{
 		i = 0;
@@ -51,17 +49,17 @@ void	*monitor_routine(void *arg)
 		{
 			if (flag_death(global, i))
 				return (NULL);
-			pthread_mutex_lock(&global->philos[i].last_meal_lock);
+			sem_wait(global->philos[i].last_meal_sem);
 			if (global->philos[i].already_eat_count < global->must_eat_count)
 				all_philo_full = 0;
-			pthread_mutex_unlock(&global->philos[i].last_meal_lock);
+			sem_post(global->philos[i].last_meal_sem);
 			i++;
 		}
 		if (all_philo_full == 1 && global->must_eat_count != -1)
 		{
-			pthread_mutex_lock(&global->stop_sim_lock);
+			sem_wait(global->stop_sim_sem);
 			global->stop_sim = 1;
-			pthread_mutex_unlock(&global->stop_sim_lock);
+			sem_post(global->stop_sim_sem);
 		}
 		usleep(100); //fine tune 200 test a faire
 	}

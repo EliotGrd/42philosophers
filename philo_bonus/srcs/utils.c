@@ -21,6 +21,14 @@ int	check_death(t_philo *philo)
 	return (0);
 }
 
+void	philo_exit(t_philo *philo)
+{
+	sem_close(philo->last_meal_sem);
+	sem_close(philo->fork_sem);
+	
+	exit(0);
+}
+
 unsigned int	timestamp(void)
 {
 	struct timeval	tv;
