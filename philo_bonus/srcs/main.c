@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
-#include <stdio.h>
 
 static sem_t *open_clean_sem(const char *name, unsigned int value)
 {
@@ -61,6 +60,7 @@ void	destructor(t_global *global, int to_free)
 	{
 		i++;
 	}
+	sem_destructor();
 	ft_free((void **)&global->philos);
 	ft_free((void **)&global->forks);
 }
@@ -82,11 +82,6 @@ int	init_philosophers(t_global *global)
 		i++;
 	}
 	global->philos = philos;
-	return (0);
-}
-
-int	init_global(t_global *global)
-{
 	return (0);
 }
 

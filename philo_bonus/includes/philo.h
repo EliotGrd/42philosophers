@@ -15,6 +15,7 @@
 
 # include <limits.h>
 # include <pthread.h>
+#include <sched.h>
 # include <semaphore.h>
 # include <fcntl.h>
 # include <sys/stat.h>
@@ -63,6 +64,7 @@ typedef struct s_global
 {
 	int				philo_count;
 	t_philo			*philos;
+	pid_t			*pids;
 	int				ttdie;
 	int				tteat;
 	int				ttsleep;

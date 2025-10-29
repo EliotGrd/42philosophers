@@ -109,7 +109,7 @@ void	start_philosophing(t_global *global)
 		}
 		if (pid == 0)
 		{
-			philosopher_process(global, i);
+			philo_routine(global, i);
 			//je sais pas quoi faire la return ? 
 		}
 		else
