@@ -48,6 +48,39 @@ static void	*lone_philo_routine(void *arg)
 	return (NULL);
 }
 
+static void	init_last_meal(t_global *global)
+{
+	int	i;
+
+	i = 0;
+	while (i < global->philo_count)
+	{
+		global->philos[i].last_meal = timestamp();
+		i++;
+	}
+}
+
+static int thread_create_loop(t_global *global)
+{
+	int i;
+
+	i = 0;
+	while (i < global->philo_count)
+	{
+		if (pthread_create(&global->philos[i].thread, NULL, &philo_routine,
+				&global->philos[i]))
+		{
+			pthread_mutex_lock(&global->stop_sim_lock);
+			global->stop_sim = 1;
+			pthread_mutex_unlock(&global->stop_sim_lock);
+			stderr_msg(THREAD);
+			break ;
+		}
+		i++;
+	}
+	return (i);
+}
+
 void	start_philosophing(t_global *global)
 {
 	int	i;
@@ -64,23 +97,8 @@ void	start_philosophing(t_global *global)
 	pthread_mutex_lock(&global->start_lock);
 	if (pthread_create(&global->monitor, NULL, &monitor_routine, global))
 		return (stderr_msg(THREAD));
-	while (i < global->philo_count)
-	{
-		if (pthread_create(&global->philos[i].thread, NULL, &philo_routine,
-				&global->philos[i]))
-		{
-			pthread_mutex_lock(&global->stop_sim_lock);
-			global->stop_sim = 1;
-			pthread_mutex_unlock(&global->stop_sim_lock);
-			stderr_msg(THREAD);
-			break ;
-		}
-		i++;
-	}
-	for (i = 0; i < global->philo_count; i++)
-	{
-		global->philos[i].last_meal = timestamp();
-	}
+	i = thread_create_loop(global);
+	init_last_meal(global);
 	pthread_mutex_unlock(&global->start_lock);
 	while (--i >= 0)
 	{

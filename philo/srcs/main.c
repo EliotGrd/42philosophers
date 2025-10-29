@@ -32,6 +32,19 @@ void	destructor(t_global *global, int to_free)
 	ft_free((void **)&global->forks);
 }
 
+static void assign_forks(t_global *global)
+{
+	int i;
+
+	i = 0;
+	while (i < global->philo_count)
+	{
+		global->philos[i].fork_right = &global->forks[i];
+		global->philos[i].fork_left = &global->forks[global->philos[i].index - 1 % global->philo_count];
+		i++;
+	}
+}
+
 int	init_philosophers(t_global *global)
 {
 	t_philo	*philos;
@@ -84,6 +97,7 @@ int	main(int ac, char **av)
 		return (-1);
 	if (init_philosophers(&global))
 		return (-1);
+	assign_forks(&global);
 	start_philosophing(&global);
 	destructor(&global, global.philo_count);
 }

@@ -24,6 +24,7 @@ static int	flag_death(t_global *global, int i)
 		pthread_mutex_lock(&global->stop_sim_lock);
 		global->stop_sim = 1;
 		pthread_mutex_unlock(&global->stop_sim_lock);
+		print_status(&global->philos[i], DIED);
 		return (1);
 	}
 	pthread_mutex_unlock(&global->philos[i].last_meal_lock);
