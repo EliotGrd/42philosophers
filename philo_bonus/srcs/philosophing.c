@@ -13,16 +13,11 @@
 #include "../includes/philo.h"
 #include <stdlib.h>
 
-static void	*philo_routine(void *arg)
+static void	*philo_routine(t_philo *philo)
 {
-	t_philo	*philo;
-
-	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->global->start_lock);
-	pthread_mutex_unlock(&philo->global->start_lock);
-	pthread_mutex_lock(&philo->last_meal_lock);
+	sem_wait(philo->last_meal_sem);
 	philo->last_meal = timestamp();
-	pthread_mutex_unlock(&philo->last_meal_lock);
+	sem_post(philo->last_meal_sem);
 	if (philo->index % 2 == 0)
 		usleep(200); // voir comment ca se comporte tel quel
 	while (1)
@@ -107,7 +102,7 @@ int	start_philosophing(t_global *global)
 		}
 		if (pid == 0)
 		{
-			philo_routine(global, i);
+			philo_routine(&global->philos[i]);
 			// je sais pas quoi faire la return ?
 		}
 		else
