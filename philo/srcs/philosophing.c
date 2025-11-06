@@ -22,10 +22,14 @@ static void	*philo_routine(void *arg)
 	pthread_mutex_lock(&philo->last_meal_lock);
 	philo->last_meal = timestamp();
 	pthread_mutex_unlock(&philo->last_meal_lock);
-	if (philo->index % 2 == 0)
-		usleep(200); // voir comment ca se comporte tel quel
+	if (philo->index == 0)
+		usleep(100);
+	else if (philo->index % 2 == 0)
+		usleep(500); // voir comment ca se comporte tel quel
 	while (1)
 	{
+		if (check_death(philo))
+			return (NULL);
 		if (eating(philo))
 			return (NULL);
 		if (sleeping(philo))

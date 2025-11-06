@@ -60,7 +60,7 @@ void	*monitor_routine(void *arg)
 			global->stop_sim = 1;
 			pthread_mutex_unlock(&global->stop_sim_lock);
 		}
-		usleep(100); //fine tune 200 test a faire
+		usleep(200); //fine tune 200 test a faire
 	}
 	return (NULL);
 }

@@ -42,6 +42,7 @@ void	philo_death_monitor(t_philo *philo)
 }
 
 //wait till le sem all philo ate est du nombre de philo ca veut dire ils ont tous mange
+//ca marche pas mais des qu'il a assez mange il post le moniteur recoit peut augmenter une value puis reattendre et quand la value est au nb de philo c bon
 //
 //wait pid sur le tableau de pid pour exit propre
 
@@ -82,7 +83,7 @@ void	monitor_routine(t_global *global)
 	sem_wait(global->stop_sim_sem);
 	//kill loop on pids
 	//waitpid
-	destr
+	destructor();
 	exit();
 }
 

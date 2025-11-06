@@ -77,10 +77,6 @@ int	thinking(t_philo *philo)
 {
 	if (check_death(philo))
 		return (1);
-	return (0);
 	print_status(philo, THINK);
-	if (philo->index % 2 == 0)
-		return (0);
-	//die >= 3 * eat + sleep
-	
+	return (0);
 }

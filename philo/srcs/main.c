@@ -32,15 +32,18 @@ void	destructor(t_global *global, int to_free)
 	ft_free((void **)&global->forks);
 }
 
-static void assign_forks(t_global *global)
+static void	assign_forks(t_global *global)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < global->philo_count)
 	{
 		global->philos[i].fork_right = &global->forks[i];
-		global->philos[i].fork_left = &global->forks[global->philos[i].index - 1 % global->philo_count];
+		if (i != 0)
+			global->philos[i].fork_left = &global->forks[i - 1];
+		else
+			global->philos[i].fork_left = &global->forks[global->philo_count - 1];
 		i++;
 	}
 }
@@ -65,7 +68,8 @@ int	init_philosophers(t_global *global)
 		if (pthread_mutex_init(&global->forks[i], NULL))
 			return (destructor(global, i - 1), 1);
 		if (pthread_mutex_init(&philos[i].last_meal_lock, NULL))
-			return (destructor(global, i - 1), pthread_mutex_destroy(&global->forks[i]), 1);
+			return (destructor(global, i - 1),
+				pthread_mutex_destroy(&global->forks[i]), 1);
 		philos[i].global = global;
 		i++;
 	}
@@ -89,7 +93,7 @@ int	main(int ac, char **av)
 {
 	t_global	global;
 
-	//global = malloc(sizeof(t_global));
+	// global = malloc(sizeof(t_global));
 	memset(&global, 0, sizeof(t_global));
 	if (parse_args(&global, ac, av))
 		return (-1);
