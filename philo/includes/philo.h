@@ -6,7 +6,7 @@
 /*   By: egiraud <egiraud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 17:57:59 by egiraud           #+#    #+#             */
-/*   Updated: 2025/10/20 20:15:46 by egiraud          ###   ########.fr       */
+/*   Updated: 2025/11/07 14:23:16 by egiraud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define USAGE "\nUsage Philosophers :\n\n  ./philo <number_of_philos> <time_to_die> <time_to_eat> <time_to_sleep> (<number_of_time_each_philosopher_must_eat>)\n\n"
+# define USAGE "\nUsage Philosophers :\n\n  ./philo <number_of_philos> \
+<time_to_die> <time_to_eat> <time_to_sleep> \
+(<number_of_time_each_philosopher_must_eat>)\n\n"
 
 # define MALLOC "philo: Memory allocation failed\n"
 # define MUTEX "philo: Mutex creation failed\n"
@@ -43,7 +45,7 @@ typedef struct s_philo
 {
 	pthread_t		thread;
 	int				index;
-	int must_eat_count; // pas necessaire ?
+	int				must_eat_count;
 	int				already_eat_count;
 	unsigned int	last_meal;
 	pthread_mutex_t	last_meal_lock;

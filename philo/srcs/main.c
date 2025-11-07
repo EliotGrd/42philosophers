@@ -6,7 +6,7 @@
 /*   By: egiraud <egiraud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 19:59:53 by egiraud           #+#    #+#             */
-/*   Updated: 2025/10/20 20:45:44 by egiraud          ###   ########.fr       */
+/*   Updated: 2025/11/07 14:20:15 by egiraud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	destructor(t_global *global, int to_free)
 	while (i < to_free)
 	{
 		pthread_mutex_destroy(&global->forks[i]);
-		// pthread_mutex_destroy(&global->philos[i].fork_right);
-		// pthread_mutex_destroy(&global->philos[i].fork_left);
 		pthread_mutex_destroy(&global->philos[i].last_meal_lock);
 		i++;
 	}
@@ -43,7 +41,8 @@ static void	assign_forks(t_global *global)
 		if (i != 0)
 			global->philos[i].fork_left = &global->forks[i - 1];
 		else
-			global->philos[i].fork_left = &global->forks[global->philo_count - 1];
+			global->philos[i].fork_left = &global->forks[global->philo_count
+				- 1];
 		i++;
 	}
 }
@@ -63,7 +62,7 @@ int	init_philosophers(t_global *global)
 	while (i < global->philo_count)
 	{
 		philos[i].index = i;
-		philos[i].must_eat_count = global->must_eat_count; // pas necessaire ?
+		philos[i].must_eat_count = global->must_eat_count;
 		philos[i].already_eat_count = 0;
 		if (pthread_mutex_init(&global->forks[i], NULL))
 			return (destructor(global, i - 1), 1);
@@ -93,7 +92,6 @@ int	main(int ac, char **av)
 {
 	t_global	global;
 
-	// global = malloc(sizeof(t_global));
 	memset(&global, 0, sizeof(t_global));
 	if (parse_args(&global, ac, av))
 		return (-1);

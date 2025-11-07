@@ -6,7 +6,7 @@
 /*   By: egiraud <egiraud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:42:45 by egiraud           #+#    #+#             */
-/*   Updated: 2025/10/20 19:39:42 by egiraud          ###   ########.fr       */
+/*   Updated: 2025/11/07 14:19:39 by egiraud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,18 @@ static void	lock_right_fork(t_philo *philo)
 	}
 }
 
-static void unlock_right_fork(t_philo *philo)
+static void	unlock_right_fork(t_philo *philo)
 {
 	if (philo->index % 2 == 0)
 	{
 		pthread_mutex_unlock(philo->fork_right);
-		//print_status_debug(philo, LEAVE_R);
 		pthread_mutex_unlock(philo->fork_left);
-		//print_status_debug(philo, LEAVE_L);
 	}
 	else
 	{
 		pthread_mutex_unlock(philo->fork_left);
-		//print_status_debug(philo, LEAVE_L);
 		pthread_mutex_unlock(philo->fork_right);
-		//print_status_debug(philo, LEAVE_R);
 	}
-
 }
 
 int	eating(t_philo *philo)
@@ -54,7 +49,7 @@ int	eating(t_philo *philo)
 	if (check_death(philo))
 		return (1);
 	lock_right_fork(philo);
-	print_status(philo, EAT); // pas sur de l'ordre ici aussi
+	print_status(philo, EAT);
 	usleep_check_death(philo->global->tteat, philo);
 	unlock_right_fork(philo);
 	pthread_mutex_lock(&philo->last_meal_lock);
@@ -75,8 +70,22 @@ int	sleeping(t_philo *philo)
 
 int	thinking(t_philo *philo)
 {
+	int	ttthink;
+	int	calc;
+
 	if (check_death(philo))
 		return (1);
 	print_status(philo, THINK);
+	if (!philo->global->philo_count % 2)
+		return (0);
+	ttthink = philo->global->tteat * 2;
+	ttthink -= philo->global->ttsleep;
+	calc = philo->global->tteat * 2;
+	calc += philo->global->ttsleep;
+	if (philo->global->ttdie < calc)
+		ttthink = 0;
+	if (ttthink < 0)
+		ttthink = 0;
+	usleep_check_death(ttthink, philo);
 	return (0);
 }

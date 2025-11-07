@@ -6,7 +6,7 @@
 /*   By: egiraud <egiraud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 23:00:39 by egiraud           #+#    #+#             */
-/*   Updated: 2025/10/20 20:16:01 by egiraud          ###   ########.fr       */
+/*   Updated: 2025/11/07 14:20:56 by egiraud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	*philo_routine(void *arg)
 	if (philo->index == 0)
 		usleep(100);
 	else if (philo->index % 2 == 0)
-		usleep(500); // voir comment ca se comporte tel quel
+		usleep(500);
 	while (1)
 	{
 		if (check_death(philo))
@@ -64,9 +64,9 @@ static void	init_last_meal(t_global *global)
 	}
 }
 
-static int thread_create_loop(t_global *global)
+static int	thread_create_loop(t_global *global)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < global->philo_count)

@@ -6,7 +6,7 @@
 /*   By: egiraud <egiraud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/15 22:35:48 by egiraud           #+#    #+#             */
-/*   Updated: 2025/10/20 15:55:00 by egiraud          ###   ########.fr       */
+/*   Updated: 2025/11/07 14:17:38 by egiraud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ int	usleep_check_death(unsigned int ms, t_philo *philo)
 	return (0);
 }
 
-void    ft_free(void **ptr)
+void	ft_free(void **ptr)
 {
-        if (!*ptr || !ptr)
-                return ;
-        free(*ptr);
-        *ptr = NULL;
+	if (!*ptr || !ptr)
+		return ;
+	free(*ptr);
+	*ptr = NULL;
 }

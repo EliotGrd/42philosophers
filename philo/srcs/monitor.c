@@ -6,7 +6,7 @@
 /*   By: egiraud <egiraud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 19:48:45 by egiraud           #+#    #+#             */
-/*   Updated: 2025/10/20 20:15:27 by egiraud          ###   ########.fr       */
+/*   Updated: 2025/11/07 14:27:15 by egiraud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	flag_death(t_global *global, int i)
 {
-	unsigned int time;
+	unsigned int	time;
 
 	time = timestamp();
 	pthread_mutex_lock(&global->philos[i].last_meal_lock);
@@ -31,15 +31,8 @@ static int	flag_death(t_global *global, int i)
 	return (0);
 }
 
-void	*monitor_routine(void *arg)
+int	monitor_routine_loop(t_global *global, int i, int all_philo_full)
 {
-	t_global *global;
-	int	all_philo_full;
-	int i;
-
-	global = (t_global *)arg;
-	pthread_mutex_lock(&global->start_lock);
-	pthread_mutex_unlock(&global->start_lock);
 	while (1)
 	{
 		i = 0;
@@ -47,7 +40,7 @@ void	*monitor_routine(void *arg)
 		while (i < global->philo_count)
 		{
 			if (flag_death(global, i))
-				return (NULL);
+				return (1);
 			pthread_mutex_lock(&global->philos[i].last_meal_lock);
 			if (global->philos[i].already_eat_count < global->must_eat_count)
 				all_philo_full = 0;
@@ -60,12 +53,23 @@ void	*monitor_routine(void *arg)
 			global->stop_sim = 1;
 			pthread_mutex_unlock(&global->stop_sim_lock);
 		}
-		usleep(200); //fine tune 200 test a faire
+		usleep(200);
 	}
-	return (NULL);
+	return (0);
 }
 
-//demander pour etre sur de quoi faire dans le cas ou tout le monde a assez mange
+void	*monitor_routine(void *arg)
+{
+	t_global	*global;
+	int			all_philo_full;
+	int			i;
 
-//pour l'instant max meals fonctionne que sur les impairs
-//comment faire pour que seulement un philo die
+	i = 0;
+	all_philo_full = 0;
+	global = (t_global *)arg;
+	pthread_mutex_lock(&global->start_lock);
+	pthread_mutex_unlock(&global->start_lock);
+	if (monitor_routine_loop(global, i, all_philo_full))
+		return (NULL);
+	return (NULL);
+}
